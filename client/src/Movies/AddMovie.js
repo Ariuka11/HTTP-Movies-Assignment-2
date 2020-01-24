@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from "react"
 import axios from 'axios'
 
-function UpdateMovie( props ){
+const AddMovie = (props) => {
+
     const [movie, setMovie] = useState({
         id: '',
         title: '',
         director: '',
         metascore: '',
+        actor : '',
         stars : []
     })
 
-    useEffect(() => {
-        axios.get(`http://localhost:5000/api/movies/${props.match.params.id}`)
-            .then(res => {
-                setMovie(res.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    },[props.match.params.id])
 
     const handleChange = e => {
         setMovie({
@@ -28,16 +21,20 @@ function UpdateMovie( props ){
     }
 
     const handleStars = e => {
-        setMovie({
-            ...movie,
-            stars: [e.target.value]
-        })
+      const actors = movie.stars
+        actors.push(movie.actor)
+        
+        setMovie({...movie, 
+            actor: '', stars: actors})
+
+        console.log(movie.stars)
     }
 
     const handleSubmit = e => {
         e.preventDefault()
-
-        axios.put(`http://localhost:5000/api/movies/${movie.id}`, movie)
+        console.log(movie)
+        axios.post(`http://localhost:5000/api/movies`, movie)
+            
             .then(res => {
                 props.history.push('/')
             })
@@ -46,11 +43,9 @@ function UpdateMovie( props ){
             })
     }
 
-    return (
+    return(
         <div>
-            <h1>Update movie</h1>
-
-            <form onSubmit = {handleSubmit}>
+            <h1>Add movie</h1>
                 <input
                         type="text"
                         name="title"
@@ -72,18 +67,29 @@ function UpdateMovie( props ){
                         value={movie.metascore}
                         onChange={handleChange}
                 />
-                {movie.stars.map(star => {
+                 <input
+                        type="text"
+                        name="actor"
+                        placeholder="Actor"
+                        value={movie.actor}
+                        onChange={handleChange}
+                />
+                {/* {movie.stars.map(star => {
                     return <input
                     type = 'text'
                     name = 'stars'
                     placeholder = 'Stars'
                     value = {star}
                     onChange = {handleStars} />
-                })}
-                <button>Save</button>
-            </form>
+                })} */}
+                <button onClick = {handleStars}>Add Actor</button>
+                <button onClick = {handleSubmit}>Save</button>
+            
+                {movie.stars.map(actor => {
+                        return <div>{actor}</div>
+                    })}
         </div>
     )
 }
 
-export default UpdateMovie;
+export default AddMovie

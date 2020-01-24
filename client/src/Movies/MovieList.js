@@ -16,6 +16,7 @@ export default class MovieList extends Component {
       .get("http://localhost:5000/api/movies")
       .then(res => this.setState({ movies: res.data }))
       .catch(err => console.log(err.response));
+
   }
 
  
@@ -31,9 +32,7 @@ export default class MovieList extends Component {
   }
 }
 
-function MovieDetails({movie, }) {
-
-
+function MovieDetails({movie}) {
   return (
     <div>
       <Link to={`/movies/${movie.id}`}>
@@ -42,7 +41,6 @@ function MovieDetails({movie, }) {
       <Link to ={`/update-movie/${movie.id}`}>
         <button className='edit-button'>Edit</button>
       </Link>
-      
     </div>
   );
 }
